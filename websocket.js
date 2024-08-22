@@ -72,7 +72,7 @@ let map = new maplibregl.Map({
     bearing: 0,
     antialias: true,
     minZoom: 8, // Minimum zoom level
-    style: `https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2/styles/items/${basemapEnum}?token=${ESRI_KEY}`,
+    style: `https://api.maptiler.com/maps/streets-v2/style.json?key=wsyYBQjqRwKnNsZrtci1`,
 });
 
 const routeIcons = {
