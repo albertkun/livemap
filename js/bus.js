@@ -4,7 +4,7 @@
 // current ESRI key set up on Nina's account
 const ESRI_KEY = "AAPKd8ea48d820b14262bd11d2d584502c01qtn6WSi6xsIYF5GHoPQl_GTT_oyAxq8z7HoptJtq1CNv3TkbvOkCkTU4wUHHsETK";
 
-const MAPTILER_KEY = "KydZlIiVFdYDFFfQ4QYq"
+const MAPTILER_KEY = "nqNzI6iSh16TlwunsB8C"
 const basemapEnum = "65aff2873118478482ec3dec199e9058";
 
 // let timer = setTimeout(() => {
@@ -133,7 +133,7 @@ let map = new maplibregl.Map({
     bearing: 0,
     antialias: true,
     minZoom: 8, // Minimum zoom level
-    style: `https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2/styles/items/${basemapEnum}?token=${ESRI_KEY}`,
+    style: `https://api.maptiler.com/maps/streets-v2/style.json?key=wsyYBQjqRwKnNsZrtci1`,
 });
 
 const routeIcons = {
@@ -410,17 +410,6 @@ function updateMap(features) {
             features: features
         });
     }
-
-    // Calculate the bounding box of the features
-    const bounds = features.reduce((bounds, feature) => {
-        const coordinates = feature.geometry.coordinates;
-        return bounds.extend(coordinates);
-    }, new maplibregl.LngLatBounds(features[0].geometry.coordinates, features[0].geometry.coordinates));
-
-    // Fit the map to the bounds
-    map.fitBounds(bounds, {
-        padding: 20
-    });
 }
 
 function processAndUpdate(data) {

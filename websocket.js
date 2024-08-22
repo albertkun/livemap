@@ -4,7 +4,7 @@
 // current ESRI key set up on Nina's account
 const ESRI_KEY = "AAPKd8ea48d820b14262bd11d2d584502c01qtn6WSi6xsIYF5GHoPQl_GTT_oyAxq8z7HoptJtq1CNv3TkbvOkCkTU4wUHHsETK";
 
-const MAPTILER_KEY = "QHioFl9Q5F97g1m2BvMR"; // New key using Nina's account
+const MAPTILER_KEY = "nqNzI6iSh16TlwunsB8C";
 // const MAPTILER_KEY = "KydZlIiVFdYDFFfQ4QYq"; // Old key
 
 const basemapEnum = "65aff2873118478482ec3dec199e9058";
@@ -72,7 +72,7 @@ let map = new maplibregl.Map({
     bearing: 0,
     antialias: true,
     minZoom: 8, // Minimum zoom level
-    style: `https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2/styles/items/${basemapEnum}?token=${ESRI_KEY}`,
+    style: `https://api.maptiler.com/maps/streets-v2/style.json?key=wsyYBQjqRwKnNsZrtci1`,
 });
 
 const routeIcons = {
