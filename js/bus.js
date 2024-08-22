@@ -4,7 +4,7 @@
 // current ESRI key set up on Nina's account
 const ESRI_KEY = "AAPKd8ea48d820b14262bd11d2d584502c01qtn6WSi6xsIYF5GHoPQl_GTT_oyAxq8z7HoptJtq1CNv3TkbvOkCkTU4wUHHsETK";
 
-const MAPTILER_KEY = "wsyYBQjqRwKnNsZrtci1"
+const MAPTILER_KEY = "nqNzI6iSh16TlwunsB8C"
 const basemapEnum = "65aff2873118478482ec3dec199e9058";
 
 // let timer = setTimeout(() => {
