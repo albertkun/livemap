@@ -410,17 +410,6 @@ function updateMap(features) {
             features: features
         });
     }
-
-    // Calculate the bounding box of the features
-    const bounds = features.reduce((bounds, feature) => {
-        const coordinates = feature.geometry.coordinates;
-        return bounds.extend(coordinates);
-    }, new maplibregl.LngLatBounds(features[0].geometry.coordinates, features[0].geometry.coordinates));
-
-    // Fit the map to the bounds
-    map.fitBounds(bounds, {
-        padding: 20
-    });
 }
 
 function processAndUpdate(data) {
