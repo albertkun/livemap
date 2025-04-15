@@ -71,24 +71,24 @@ fetch('https://api.metro.net/LACMTA/route_overview')
       value: route.route_code,
       label: route.route_code
     }));
-	// Step 1: Extract the route parameter from the URL
-	const urlParams = new URLSearchParams(window.location.search);
-	const selectedRoute = urlParams.get('route'); // Assuming 'route' is the name of the parameter
+    // Set the dropdown's current selection from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedRoute = urlParams.get('route');
 
-	// Step 2: Set the current selection of the routeDropdownChoices
-
-	routeDropdownChoices = new Choices('#route-select', {
-		choices,
-		removeItemButton: true,
-		classNames: {
-		  item: 'choices__item roundedBusButton', // Add 'roundedBusButton' class to items
-		  choice: 'choices__choice roundedBusButton', // Add 'roundedBusButtonFull' class to choices
-		},
-	  });
-	  
-	  if (selectedRoute) {
-		routeDropdownChoices.setChoiceByValue(selectedRoute);
-	  }
+    // Initialize Choices with dropdown position forced to drop DOWN
+    routeDropdownChoices = new Choices('#route-select', {
+      position: 'bottom',  // Force dropdown to open downward
+      choices,
+      removeItemButton: true,
+      classNames: {
+         item: 'choices__item roundedBusButton',
+         choice: 'choices__choice roundedBusButton'
+      }
+    });
+    
+    if (selectedRoute) {
+      routeDropdownChoices.setChoiceByValue(selectedRoute);
+    }
   })
   .catch(error => console.error('Error fetching route data:', error));
 
@@ -155,7 +155,7 @@ map.on('load', () => {
 	const layers = map.getStyle().layers;
 	map.addSource('bus', {
 		'type': 'vector',
-		'tiles': ['https://lacmta.github.io/vectortiles/bus/{z}/{x}/{y}.pbf']
+		'tiles': ['https://livemetro.albertmaps.com/tiles_bus_routes/{z}/{x}/{y}.pbf'], // Local tile source
 	});
 	postMapSetup();
 
@@ -163,7 +163,7 @@ map.on('load', () => {
 		'id': 'bus',
 		'type': 'line',
 		'source': 'bus',
-		'source-layer': 'flattened_bus', // This should be the name of the layer in your vector tiles
+		'source-layer': 'routes', // This should be the name of the layer in your vector tiles
 		'layout': {},
 		'paint': {
 			'line-color': '#E16710',
@@ -177,6 +177,7 @@ map.on('load', () => {
 			break;
 		}
 	}
+
 	new mapboxglEsriSources.TiledMapService('imagery-source', map, {
 		url: 'https://tiles.arcgis.com/tiles/TNoJFjk1LsD45Juj/arcgis/rest/services/Map_RGB_Vector_Offset_RC5/MapServer'
 	})
@@ -816,4 +817,32 @@ map.addControl(geolocate, 'top-left');
 geolocate.on('geolocate', function(e) {
     map.flyTo({center: [e.coords.longitude, e.coords.latitude], zoom: 14});
 });
+
+const menu = document.getElementById('menu');
+const menuClose = document.getElementById('menu-close');
+const routeSelect = document.getElementById('route-select');
+
+// Open the menu
+document.getElementById('menu-toggle').addEventListener('click', () => {
+    menu.classList.add('open');
+});
+
+// Close the menu
+menuClose.addEventListener('click', () => {
+    menu.classList.remove('open');
+});
+
+// Populate the route dropdown dynamically from routeCodesArray
+function populateRoutes() {
+    routeSelect.innerHTML = ''; // Clear existing options
+    routeCodesArray.forEach(routeCode => {
+        const option = document.createElement('option');
+        option.value = routeCode;
+        option.textContent = `Route ${routeCode}`;
+        routeSelect.appendChild(option);
+    });
+}
+
+// Call populateRoutes whenever routeCodesArray is updated
+populateRoutes();
 

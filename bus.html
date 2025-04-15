@@ -13,600 +13,36 @@
     <!-- Include the Font Awesome library -->
     <link rel="stylesheet" href="./styles/fontawesome.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="./bus.css">
 
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Open Sans', sans-serif;
-            overflow-x: hidden;
-            /* Prevents horizontal overflow */
-        }
-
-        .dot {
-            animation: dot 1s infinite;
-        }
-
-        @keyframes slideAway {
-            0% {
-                transform: translateX(0);
-            }
-
-            60% {
-                transform: translateX(20%);
-            }
-
-            100% {
-                transform: translateX(100%);
-            }
-        }
-
-        #legend {
-            transform: translateX(0);
-            cursor: pointer;
-            padding: 0;
-            z-index: 9999;
-        }
-
-        @media (max-width: 600px) {
-            #legend {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        #legend.hidden {
-            animation: slideAway .5s forwards;
-            padding-left: 30px;
-        }
-
-        @keyframes dot {
-
-            0%,
-            20% {
-                opacity: 0;
-            }
-
-            50%,
-            100% {
-                opacity: 1;
-            }
-        }
-
-        #toggle-legend {
-            position: absolute;
-            left: -30px;
-            /* Adjust as needed */
-            top: 0;
-            bottom: 0;
-            width: 30px;
-            /* Adjust as needed */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-            background-color: #fff;
-            /* Adjust as needed */
-            border: none;
-            cursor: pointer;
-        }
-
-        #toggle-legend i {
-            font-size: 12px;
-            /* Adjust as needed */
-        }
-
-
-        .dot:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .dot:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes dot {
-
-            0%,
-            20% {
-                opacity: 0;
-            }
-
-            50%,
-            100% {
-                opacity: 1;
-            }
-        }
-
-        .dot1 {
-            animation: dot 1s infinite;
-        }
-
-        .dot2 {
-            animation: dot 1s 0.33s infinite;
-        }
-
-        .dot3 {
-            animation: dot 1s 0.66s infinite;
-        }
-
-        .beta {
-            color: #FF4500;
-            /* Orange text color */
-            font-size: 0.8em;
-            /* Smaller font size */
-        }
-
-        html,
-        body,
-        #map {
-            height: 100%;
-        }
-
-        .marker {
-            display: block;
-            visibility: visible;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            padding: 0;
-            background-size: cover;
-
-        }
-
-
-        .maplibregl-ctrl-icon.home-icon {
-            background-color: #fff;
-            border: none;
-            border-radius: 3px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            padding: 6px;
-            width: auto;
-            height: auto;
-            outline: none;
-        }
-
-        .maplibregl-ctrl-icon.home-icon:hover {
-            background-color: #f8f8f8;
-        }
-
-        .maplibregl-ctrl-icon.home-icon i {
-            color: #404040;
-            font-size: 14px;
-        }
-
-        #route-select {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9999;
-            padding: 10px;
-            background-color: white;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            width: 200px !important;
-            /* Adjust as needed */
-        }
-
-        .choices {
-            width: 100% !important;
-            z-index: 9999;
-        }
-
-        .choices__list--dropdown {
-            max-height: 200px;
-            /* Adjust as needed */
-            overflow-y: auto;
-            z-index: 9999;
-        }
-
-        .choices__item {
-            color: black !important;
-            /* Adjust as needed */
-            background-color: white !important;
-            /* Adjust as needed */
-            z-index: 9999;
-        }
-
-        .choices__item--selectable {
-            color: black !important;
-            /* Adjust as needed */
-            background-color: white !important;
-            /* Adjust as needed */
-            z-index: 9999;
-        }
-
-        .choices__item--selected {
-            color: white !important;
-            /* Adjust as needed */
-            background-color: #007bff !important;
-            /* Adjust as needed */
-            z-index: 9999;
-        }
-
-        #update-time {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            background-color: white;
-            padding: 5px;
-            border-radius: 3px;
-            z-index: 1;
-            /* Ensure it's above other map elements */
-        }
-
-        .issues {
-            font-size: 12px;
-        }
-
-        .alert {
-            padding: 20px;
-            background-color: #f44336;
-            /* Red */
-            color: white;
-            opacity: 1;
-            transition: opacity 0.6s;
-            /* 600ms to fade out */
-            margin-bottom: 15px;
-            text-align: center;
-        }
-	.roundedBusButton {
-		font-family: sans-serif;
-		font-weight: 600;
-		font-style: normal;
-		background-color: #e1670f;
-		color: #fff;
-		text-align: center;
-		border-radius: .25rem; /* Smaller radius for a subtler effect */
-		padding: .15rem .25rem; /* Smaller padding */
-		font-size: 1rem; /* Smaller font size */
-		text-decoration: none;
-		min-width: 10px; /* Adjusted minimum width */
-	}
-	/* Target only the selected item with the custom class */
-	.choices__item roundedBusButton choices__item--selectable {
-    border-radius: 15px; /* Example of rounded corners for selected item */
-    background-color: #007bff !important; /* Change the background color for selected item */
-    color: white; /* Change the text color for selected item */
-    /* Add any other styles for the selected item */
-}
-
-.choices {
-	position:relative;
-	margin-bottom:24px;
-	font-size:16px
-  }
-  .choices:focus {
-	outline:0
-  }
-  .choices:last-child {
-	margin-bottom:0
-  }
-  .choices.is-disabled .choices__inner,
-  .choices.is-disabled .choices__input {
-	background-color:#eaeaea;
-	cursor:not-allowed;
-	-webkit-user-select:none;
-	-ms-user-select:none;
-	user-select:none
-  }
-  .choices.is-disabled .choices__item {
-	cursor:not-allowed
-  }
-  .choices [hidden] {
-	display:none!important
-  }
-  .choices[data-type*=select-one] {
-	cursor:pointer
-  }
-  .choices[data-type*=select-one] .choices__inner {
-	padding-bottom:7.5px
-  }
-  .choices[data-type*=select-one] .choices__input {
-	display:block;
-	width:100%;
-	padding:10px;
-	border-bottom:1px solid #ddd;
-	background-color:#fff;
-	margin:0
-  }
-  .choices[data-type*=select-one] .choices__button {
-	background-image:url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMSAyMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjU5Mi4wNDRsMTguMzY0IDE4LjM2NC0yLjU0OCAyLjU0OEwuMDQ0IDIuNTkyeiIvPjxwYXRoIGQ9Ik0wIDE4LjM2NEwxOC4zNjQgMGwyLjU0OCAyLjU0OEwyLjU0OCAyMC45MTJ6Ii8+PC9nPjwvc3ZnPg==);
-	padding:0;
-	background-size:8px;
-	position:absolute;
-	top:50%;
-	right:0;
-	margin-top:-10px;
-	margin-right:25px;
-	height:20px;
-	width:20px;
-	border-radius:10em;
-	opacity:.5
-  }
-  .choices[data-type*=select-one] .choices__button:focus,
-  .choices[data-type*=select-one] .choices__button:hover {
-	opacity:1
-  }
-  .choices[data-type*=select-one] .choices__button:focus {
-	box-shadow:0 0 0 2px #00bcd4
-  }
-  .choices[data-type*=select-one] .choices__item[data-value=''] .choices__button {
-	display:none
-  }
-  .choices[data-type*=select-one]:after {
-	content:'';
-	height:0;
-	width:0;
-	border-style:solid;
-	border-color:#333 transparent transparent;
-	border-width:5px;
-	position:absolute;
-	right:11.5px;
-	top:50%;
-	margin-top:-2.5px;
-	pointer-events:none
-  }
-  .choices[data-type*=select-one].is-open:after {
-	border-color:transparent transparent #333;
-	margin-top:-7.5px
-  }
-  .choices[data-type*=select-one][dir=rtl]:after {
-	left:11.5px;
-	right:auto
-  }
-  .choices[data-type*=select-one][dir=rtl] .choices__button {
-	right:auto;
-	left:0;
-	margin-left:25px;
-	margin-right:0
-  }
-  .choices[data-type*=select-multiple] .choices__inner,
-  .choices[data-type*=text] .choices__inner {
-	cursor:text
-  }
-  .choices[data-type*=select-multiple] .choices__button,
-  .choices[data-type*=text] .choices__button {
-	position:relative;
-	display:inline-block;
-	margin:0 -4px 0 8px;
-	padding-left:16px;
-	border-left:1px solid #008fa1;
-	background-image:url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMSAyMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjRkZGIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjU5Mi4wNDRsMTguMzY0IDE4LjM2NC0yLjU0OCAyLjU0OEwuMDQ0IDIuNTkyeiIvPjxwYXRoIGQ9Ik0wIDE4LjM2NEwxOC4zNjQgMGwyLjU0OCAyLjU0OEwyLjU0OCAyMC45MTJ6Ii8+PC9nPjwvc3ZnPg==);
-	background-size:8px;
-	width:8px;
-	line-height:1;
-	opacity:.75;
-	border-radius:0
-  }
-  .choices[data-type*=select-multiple] .choices__button:focus,
-  .choices[data-type*=select-multiple] .choices__button:hover,
-  .choices[data-type*=text] .choices__button:focus,
-  .choices[data-type*=text] .choices__button:hover {
-	opacity:1
-  }
-  .choices__inner {
-	display:inline-block;
-	vertical-align:top;
-	width:100%;
-	background-color:#f9f9f9;
-	padding:7.5px 7.5px 3.75px;
-	border:1px solid #ddd;
-	border-radius:2.5px;
-	font-size:14px;
-	min-height:44px;
-	overflow:hidden
-  }
-  .is-focused .choices__inner,
-  .is-open .choices__inner {
-	border-color:#b7b7b7
-  }
-  .is-open .choices__inner {
-	border-radius:2.5px 2.5px 0 0
-  }
-  .is-flipped.is-open .choices__inner {
-	border-radius:0 0 2.5px 2.5px
-  }
-  .choices__list {
-	margin:0;
-	padding-left:0;
-	list-style:none
-  }
-  .choices__list--single {
-	display:inline-block;
-	padding:4px 16px 4px 4px;
-	width:100%
-  }
-  [dir=rtl] .choices__list--single {
-	padding-right:4px;
-	padding-left:16px
-  }
-  .choices__list--single .choices__item {
-	width: 50%;
-	font-family: sans-serif;
-	font-weight: 600;
-	font-style: normal;
-	background-color: #e1670f !important;
-	color: #fff !important;
-	text-align: center;
-	border-radius: .25rem;
-	padding: .15rem .25rem;
-	font-size: 1rem;
-	text-decoration: none;
-	min-width: 10px;
-  }
-  .choices__list--multiple {
-	display:inline
-  }
-  .choices__list--multiple .choices__item {
-	display:inline-block;
-	vertical-align:middle;
-	border-radius:20px;
-	padding:4px 10px;
-	font-size:12px;
-	font-weight:500;
-	margin-right:3.75px;
-	margin-bottom:3.75px;
-	background-color:#00bcd4;
-	border:1px solid #00a5bb;
-	color:#fff;
-	word-break:break-all;
-	box-sizing:border-box
-  }
-  .choices__list--multiple .choices__item[data-deletable] {
-	padding-right:5px
-  }
-  [dir=rtl] .choices__list--multiple .choices__item {
-	margin-right:0;
-	margin-left:3.75px
-  }
-  .choices__list--multiple .choices__item.is-highlighted {
-	background-color:#00a5bb;
-	border:1px solid #008fa1
-  }
-  .is-disabled .choices__list--multiple .choices__item {
-	background-color:#aaa;
-	border:1px solid #919191
-  }
-  .choices__list--dropdown {
-	visibility:hidden;
-	z-index:1;
-	position:absolute;
-	width:100%;
-	background-color:#fff;
-	border:1px solid #ddd;
-	top:100%;
-	margin-top:-1px;
-	border-bottom-left-radius:2.5px;
-	border-bottom-right-radius:2.5px;
-	overflow:hidden;
-	word-break:break-all;
-	will-change:visibility
-  }
-  .choices__list--dropdown.is-active {
-	visibility:visible
-  }
-  .is-open .choices__list--dropdown {
-	border-color:#b7b7b7
-  }
-  .is-flipped .choices__list--dropdown {
-	top:auto;
-	bottom:100%;
-	margin-top:0;
-	margin-bottom:-1px;
-	border-radius:.25rem .25rem 0 0
-  }
-  .choices__list--dropdown .choices__list {
-	position:relative;
-	max-height:300px;
-	overflow:auto;
-	-webkit-overflow-scrolling:touch;
-	will-change:scroll-position
-  }
-  .choices__list--dropdown .choices__item {
-	position:relative;
-	padding:10px;
-	font-size:14px
-  }
-  [dir=rtl] .choices__list--dropdown .choices__item {
-	text-align:right
-  }
-  @media (min-width:640px) {
-	.choices__list--dropdown .choices__item--selectable {
-	  padding-right:100px
-	}
-	.choices__list--dropdown .choices__item--selectable:after {
-	  content:attr(data-select-text);
-	  font-size:12px;
-	  opacity:0;
-	  position:absolute;
-	  right:10px;
-	  top:50%;
-	  transform:translateY(-50%)
-	}
-	[dir=rtl] .choices__list--dropdown .choices__item--selectable {
-	  text-align:right;
-	  padding-left:100px;
-	  padding-right:10px
-	}
-	[dir=rtl] .choices__list--dropdown .choices__item--selectable:after {
-	  right:auto;
-	  left:10px
-	}
-  }
-  .choices__list--dropdown .choices__item--selectable.is-highlighted {
-	background-color:#f2f2f2
-  }
-  .choices__list--dropdown .choices__item--selectable.is-highlighted:after {
-	opacity:.5
-  }
-  .choices__item {
-	cursor:default
-  }
-  .choices__item--selectable {
-	cursor:pointer
-  }
-  .choices__item--disabled {
-	cursor:not-allowed;
-	-webkit-user-select:none;
-	-ms-user-select:none;
-	user-select:none;
-	opacity:.5
-  }
-  .choices__heading {
-	font-weight:600;
-	font-size:12px;
-	padding:10px;
-	border-bottom:1px solid #f7f7f7;
-	color:gray
-  }
-  .choices__button {
-	text-indent:-9999px;
-	-webkit-appearance:none;
-	-moz-appearance:none;
-	appearance:none;
-	border:0;
-	background-color:transparent;
-	background-repeat:no-repeat;
-	background-position:center;
-	cursor:pointer
-  }
-  .choices__button:focus,
-  .choices__input:focus {
-	outline:0
-  }
-  .choices__input {
-	display:inline-block;
-	vertical-align:baseline;
-	background-color:#f9f9f9;
-	font-size:14px;
-	margin-bottom:5px;
-	border:0;
-	border-radius:0;
-	max-width:100%;
-	padding:4px 0 4px 2px
-  }
-  [dir=rtl] .choices__input {
-	padding-right:2px;
-	padding-left:0
-  }
-  .choices__placeholder {
-	opacity:.5
-  }
-  
-    </style>
 	<link rel="stylesheet" href="/styles/choices.min.css">
 	<link rel="stylesheet" href="styles/index-style.css">
 	<script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"></script>
 	
 </head>
 
-<div id="map"></div>
-
 <body>
+    <!-- Updated drop–down panel (no separate close button behavior) -->
+    <div id="menu-hover" class="closed">
+        <div id="menu-header">
+            <h4>Select a Route</h4>
+            <!-- The SVG remains visible for style, but its click is handled by the container -->
+            <div id="menu-close" style="cursor:pointer;">
+
+            </div>
+        </div>
+        <div id="menu-content">
+            <select id="route-select">
+                <!-- Options will be dynamically populated -->
+            </select>
+        </div>
+    </div>
+    <!-- Toggle button centered at the top -->
+    <button id="menu-toggle">Change Route</button>
+
     <div id="update-time"></div>
+
+    <div id="map"></div>
 
     <div id="legend-positioner">
         <div id="legend-mini">
@@ -628,33 +64,6 @@
                             fill="black" fill-opacity="0.85" />
                     </g>
                 </svg>
-            <div id="legend">
-                <div id="legend-header">
-                    <img src="images/metro_logo_only_black.png" alt="Metro Logo" width="40">
-                    <div id="legend-title">
-                        <div>Metro Live Map</div>
-                        <div class="beta">Beta</div>
-                    </div>
-                </div>
-                <hr>
-				<select id="route-select">
-				</select>
-
-                <div id="legend-share">
-					<a href="https://forms.office.com/g/nMMFuK5QYe" target="_blank">
-                        <img src="lightbulb.svg" alt="Lightbulb icon" id="lightbulb">
-                        Share your thoughts!
-                    
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 12 13" fill="none">
-                            <path
-                                d="M9 7V10C9 10.2652 8.89464 10.5196 8.70711 10.7071C8.51957 10.8946 8.26522 11 8 11H2.5C2.23478 11 1.98043 10.8946 1.79289 10.7071C1.60536 10.5196 1.5 10.2652 1.5 10V4.5C1.5 4.23478 1.60536 3.98043 1.79289 3.79289C1.98043 3.60536 2.23478 3.5 2.5 3.5H5.5"
-                                stroke="black" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M7.5 2H10.5V5" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M5 7.5L10.5 2" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -662,7 +71,36 @@
 <script src="js/bus.js"></script>
 <script src="js/index.js"></script>
 <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const menu = document.getElementById('menu-hover');
+  const menuToggle = document.getElementById('menu-toggle');
+  const routeSelect = document.getElementById('route-select');
 
+  // Open the menu when toggle is clicked.
+  menuToggle.addEventListener('click', () => {
+      menu.classList.add('open');
+      menuToggle.style.display = 'none';
+  });
+
+  // Close the menu if the click happens outside the menu content
+  menu.addEventListener('click', (e) => {
+      if (!e.target.closest('#menu-content')) {
+          menu.classList.remove('open');
+          menuToggle.style.display = 'block';
+      }
+  });
+
+  // (Optional) Prevent click events from bubbling up from the route selector
+  routeSelect.addEventListener('click', (e) => {
+      e.stopPropagation();
+  });
+
+  // Close the menu upon selection.
+  routeSelect.addEventListener('change', () => {
+      menu.classList.remove('open');
+      menuToggle.style.display = 'block';
+  });
+});
 </script>
 
 </html>
