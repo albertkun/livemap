@@ -313,9 +313,9 @@ body {
 }
 
 .choices__list--dropdown {
-    max-height: 200px;
+    max-height: 300px !important;
     /* Adjust as needed */
-    overflow-y: auto;
+    overflow-y: hidden !important;
     z-index: 9999;
 }
 
