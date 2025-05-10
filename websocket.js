@@ -820,7 +820,6 @@ function updateMarkerBearing(vehicle, computedHeading) {
 	  
 	bearingEl.style.width = '20px';
 	bearingEl.style.height = '20px';
-	bearingEl.style.backgroundColor = 'black'; // temporary for visibility; remove if desired
 	bearingEl.style.borderRadius = '50%';
 	let offset = 90; // Adjust this value based on your icon's default orientation
 	let adjustedHeading = computedHeading + offset;
