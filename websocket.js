@@ -546,6 +546,8 @@ function createNewMarker(vehicle, features) {
     el.className = 'marker';
     el.setAttribute('data-route', routeCode);
     el.setAttribute('data-trip', tripId);
+
+el.style.zIndex = 9999;
     el.setAttribute('data-mode', isBus ? 'bus' : 'rail')
     el.setAttribute('data-timestamp', vehicle.properties.timestamp);
     el.setAttribute('data-vehicle-id', vehicle.properties.vehicle_id); // Add vehicle_id as a data attribute
@@ -624,6 +626,20 @@ function cancelAnimationFrameForVehicle(vehicleId) {
 }
 
 function updateExistingMarker(vehicle, features) {
+
+// Add this once, before or after marker creation
+if (!document.getElementById('hide-marker-pseudo')) {
+  const style = document.createElement('style');
+  style.id = 'hide-marker-pseudo';
+  style.textContent = `
+    .marker::after,
+    .marker::before {
+      display: none !important;
+      background: none !important;
+    }
+  `;
+  document.head.appendChild(style);
+}
     const marker = markers[vehicle.properties.vehicle_id];
     let currentCoordinates = marker.getLngLat();
 
