@@ -808,3 +808,14 @@ map.addControl(geolocate, 'top-left');
 geolocate.on('geolocate', function(e) {
     map.flyTo({center: [e.coords.longitude, e.coords.latitude], zoom: 14});
 });
+
+if (!document.getElementById('hide-bearing-indicator')) {
+  const style = document.createElement('style');
+  style.id = 'hide-bearing-indicator';
+  style.textContent = `
+    .bearing-indicator {
+      display: none !important;
+    }
+  `;
+  document.head.appendChild(style);
+}
