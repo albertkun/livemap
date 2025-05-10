@@ -246,6 +246,10 @@ function animateMarker(vehicle, diffLng, diffLat, steps, currentCoordinates) {
 		  
 		  markers[vehicle.properties.vehicle_id].setLngLat([newLng, newLat]);
 		  
+		  // Compute heading from the movement delta (in degrees)
+		  let computedHeading = Math.atan2(diffLat, diffLng) * 180 / Math.PI;
+		  updateMarkerBearing(vehicle, computedHeading);
+		  
 		  i++;
 		  animations[vehicle.properties.vehicle_id] = requestAnimationFrame(animate);
 		} else {
@@ -448,6 +452,11 @@ function processAndUpdate(data) {
     // Update the content of the update time div
     updateTimeDiv.textContent = `Updated at ${now.toLocaleTimeString()}`;
     updateTimeDiv.style.fontSize = '12px';
+
+    // For each vehicle update, update its bearing indicator:
+    if (data && data.vehicle && data.vehicle.trip) {
+        updateMarkerBearing(data.vehicle);
+    }
 }
 function getFeaturesFromData(data) {
     let features;
@@ -488,7 +497,7 @@ function processVehicleData(data, features) {
 
     data.features.filter(vehicle => vehicle.properties && vehicle.properties.trip_id).forEach(vehicle => {
         const vehicleTimestamp = parseInt(vehicle.properties.timestamp);
-
+		updateMarkerBearing(vehicle);
         // Check if the data is older than 1 minute
         if (currentTimestamp - vehicleTimestamp > 60) {
             return; // Skip this vehicle data
@@ -789,3 +798,32 @@ map.addControl(geolocate, 'top-left');
 geolocate.on('geolocate', function(e) {
     map.flyTo({center: [e.coords.longitude, e.coords.latitude], zoom: 14});
 });
+function updateMarkerBearing(vehicle, computedHeading) {
+	let marker = markers[vehicle.properties.vehicle_id];
+	if (!marker) return;
+	let el = marker.getElement();
+	let bearingEl = el.querySelector('.bearing-indicator');
+	if (!bearingEl) {
+	  bearingEl = document.createElement('span');
+	  bearingEl.className = 'bearing-indicator';
+	  // Ensure the parent allows overflow
+	  el.style.overflow = 'visible';
+	  bearingEl.style.position = 'absolute';
+	  bearingEl.style.top = '0';
+	  bearingEl.style.left = '0';
+	//   bearingEl.style.zIndex = '1000';
+	  el.appendChild(bearingEl);
+	}
+	
+	// Use the GTFS-RT heading if valid, otherwise fallback to the computed heading.
+	let heading = computedHeading;
+	  
+	bearingEl.style.width = '20px';
+	bearingEl.style.height = '20px';
+	bearingEl.style.backgroundColor = 'black'; // temporary for visibility; remove if desired
+	bearingEl.style.borderRadius = '50%';
+	let offset = 90; // Adjust this value based on your icon's default orientation
+	let adjustedHeading = computedHeading + offset;
+	bearingEl.style.transform = `rotate(${adjustedHeading}deg)`;
+	bearingEl.style.display = 'inline-block';
+  }
