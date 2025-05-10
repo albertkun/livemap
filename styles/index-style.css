@@ -357,3 +357,28 @@ body {
 .issues {
     font-size: 12px;
 }
+
+#legend-switch {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+}
+#legend-switch #bus-switch {
+    background-color: #e1670f;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+#legend-switch #bus-switch:hover {
+    background-color: #cf5900;
+}
+@media (max-width: 600px) {
+    #legend-switch #bus-switch {
+        width: 80%;
+        padding: 10px;
+        font-size: 16px;
+    }
+}
