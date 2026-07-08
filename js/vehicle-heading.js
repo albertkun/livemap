@@ -39,26 +39,21 @@ const VehicleHeading = (() => {
 				position: absolute;
 				left: 50%;
 				top: 0;
-				width: 85%;
+				width: 100%;
 				aspect-ratio: 1;
-				transform: translate(-50%, -80%);
+				transform: translate(-50%, -75.5%);
 				background: url('${ARROW_URL}') no-repeat center / contain;
-			}
-			.heading-face {
-				position: absolute;
-				inset: 0;
-				background: inherit;
-				border-radius: inherit;
-				pointer-events: none;
 			}
 		`;
 		document.head.appendChild(style);
 	}
 
 	// Adds the (initially hidden) arrow to a marker element. The chip is the
-	// same size as the marker and overlaps ("bleeds into") it; the face is a
-	// copy of the marker's own background stacked above the ring, so the
-	// overlapping part of the chip tucks behind the vehicle icon.
+	// arrow.svg "blob": an arrow head whose flared neck is drawn in the
+	// marker's own coordinate space, meeting the marker circle tangentially
+	// and tucking just under its edge, so the two render as one seamless
+	// shape (see arrow.svg for the geometry; its viewBox and the sizing
+	// here must stay in sync).
 	function attach(markerEl) {
 		ensureStyles();
 		const ring = document.createElement('div');
@@ -67,9 +62,6 @@ const VehicleHeading = (() => {
 		chip.className = 'heading-chip';
 		ring.appendChild(chip);
 		markerEl.appendChild(ring);
-		const face = document.createElement('div');
-		face.className = 'heading-face';
-		markerEl.appendChild(face);
 	}
 
 	// A usable bearing is a finite number other than the 0.0 "unknown"

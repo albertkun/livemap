@@ -1,29 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 576">
-    <defs>
-        <style>
-            .cls-1 {
-                fill: none;
-            }
-
-            .cls-2 {
-                fill: #fff;
-            }
-
-            .cls-3 {
-                fill: #231f20;
-            }
-        </style>
-    </defs>
-    <g id="Layer_1-2" data-name="Layer 1" transform="rotate(180, 288, 288)">
-        <g id="Arrow">
-            <rect class="cls-1" width="576" height="576" transform="translate(576 576) rotate(180)"/>
-            <g id="Arrow-2" data-name="Arrow">
-                <g>
-                    <path class="cls-3" d="m518.25,288.09c0-127.25-103.15-230.4-230.4-230.4S57.45,160.84,57.45,288.09s103.15,230.4,230.4,230.4,230.4-103.15,230.4-230.4"/>
-                    <polygon class="cls-2" points="287.87 439.24 158.37 309.76 158.37 239.15 261.37 343.66 261.37 136.82 314.37 136.82 314.37 343.66 417.37 239.15 417.37 309.76 287.87 439.24"/>
-                </g>
-            </g>
-        </g>
-    </g>
+<!-- Heading "blob" for vehicle markers. Drawn in the marker's coordinate
+     space: the marker is a circle of radius 100 centred at (0,0), just below
+     this viewBox. The arrow head is a circle of radius 85 at (0,-151); its
+     neck flares out through radius-40 fillet arcs that meet the marker circle
+     tangentially at (±77.39,-63.33), and the seat arc (radius 95) tucks just
+     inside the marker's edge, so head and marker read as one continuous
+     shape. Fill is #000 to match the rail.svg / bus.svg marker bodies.
+     Sized and positioned by .heading-chip in js/vehicle-heading.js: the
+     element is the marker's size and is shifted up by 75.5% so this
+     coordinate space lines up with the marker's. Keep the two in sync. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -251 200 200">
+    <path d="M 73.52 -60.16
+             L 77.39 -63.33
+             A 40 40 0 0 1 73.68 -108.61
+             A 85 85 0 1 0 -73.68 -108.61
+             A 40 40 0 0 1 -77.39 -63.33
+             L -73.52 -60.16
+             A 95 95 0 0 1 73.52 -60.16
+             Z"/>
+    <polygon fill="#fff" points="0,-207 47.8,-159 47.8,-133 9.8,-171.5 9.8,-104 -9.8,-104 -9.8,-171.5 -47.8,-133 -47.8,-159"/>
 </svg>
