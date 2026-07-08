@@ -446,11 +446,6 @@ function processAndUpdate(data) {
     // Update the content of the update time div
     updateTimeDiv.textContent = `Updated at ${now.toLocaleTimeString()}`;
     updateTimeDiv.style.fontSize = '12px';
-
-    // For each vehicle update, update its bearing indicator:
-    if (data && data.vehicle && data.vehicle.trip) {
-        updatePopup(data.vehicle);
-    }
 }
 function getFeaturesFromData(data) {
     let features;
@@ -555,8 +550,13 @@ el.style.zIndex = 9999;
 
 	el.style.background = `url(${iconUrl}) no-repeat center/cover`;
 
-    // Rotate the icon based on the heading
-    const heading = vehicle.properties.position_bearing;
+    // Resolve the heading; null means "unknown" and keeps the arrow hidden.
+    // A stale GPS fix yields null here, so no arrow is shown for it.
+    const heading = VehicleHeading.resolve(
+        vehicle.properties.position_bearing, null, null, null,
+        vehicle.properties.position_speed, vehicle.properties.timestamp
+    );
+    VehicleHeading.attach(el);
 
     el.style.backgroundRepeat = 'no-repeat';
     el.style.backgroundSize = 'cover';
@@ -589,11 +589,17 @@ el.style.zIndex = 9999;
         .setPopup(popup) // Set the popup
         .addTo(map);
 
-		// .setRotation(heading) // Rotate the marker
     marker.properties = {
         vehicle_id: vehicle.properties.vehicle_id,
         Heading: heading
     };
+    marker.lastHeading = heading;
+    marker.lastDataCoords = vehicle.geometry.coordinates;
+    // First heading is unverified — the next fresh update may replace it
+    marker._provisionalHeading = true;
+    if (heading !== null) {
+        VehicleHeading.apply(marker, heading, map.getBearing());
+    }
     // Convert the timestamp to a number and store it
     marker.timestamp = parseInt(vehicle.properties.timestamp);
     marker.route_code = vehicle.properties.route_code;
@@ -626,24 +632,32 @@ function cancelAnimationFrameForVehicle(vehicleId) {
 }
 
 function updateExistingMarker(vehicle, features) {
-
-// Add this once, before or after marker creation
-if (!document.getElementById('hide-marker-pseudo')) {
-  const style = document.createElement('style');
-  style.id = 'hide-marker-pseudo';
-  style.textContent = `
-    .marker::after,
-    .marker::before {
-      display: none !important;
-      background: none !important;
-    }
-  `;
-  document.head.appendChild(style);
-}
     const marker = markers[vehicle.properties.vehicle_id];
+
+    // Stop any in-flight animation: overlapping animation loops fight over
+    // the marker and leave getLngLat() pointing behind the vehicle.
+    cancelAnimationFrameForVehicle(vehicle.properties.vehicle_id);
     let currentCoordinates = marker.getLngLat();
 
     if (vehicle.geometry && vehicle.geometry.coordinates) {
+        // Update the heading using the previous *feed* position (not the
+        // animated marker position) for the movement fallback. A dropped
+        // bearing resolves to the previous heading instead of north.
+        const heading = VehicleHeading.resolve(
+            vehicle.properties.position_bearing,
+            marker.lastDataCoords || currentCoordinates,
+            vehicle.geometry.coordinates,
+            marker,
+            vehicle.properties.position_speed,
+            vehicle.properties.timestamp
+        );
+        marker.lastDataCoords = vehicle.geometry.coordinates;
+        if (heading !== null) {
+            marker.lastHeading = heading;
+            marker.properties.Heading = heading;
+            VehicleHeading.apply(marker, heading, map.getBearing());
+        }
+
         let diffLng = vehicle.geometry.coordinates[0] - currentCoordinates.lng;
         let diffLat = vehicle.geometry.coordinates[1] - currentCoordinates.lat;
         let distance = Math.sqrt(diffLng * diffLng + diffLat * diffLat);
@@ -695,8 +709,9 @@ function updatePopup(vehicle) {
 	}
 }
 
+// Keep arrows pointing at their true compass heading when the map rotates
 map.on('rotate', function() {
-    // updateMarkerRotations();
+    VehicleHeading.refreshAll(markers, map.getBearing());
 });
 
 
@@ -718,28 +733,6 @@ map.on('zoom', function() {
         el.style.height = `${markerSize}px`;
     }
 });
-
-function updateMarkerRotations() {
-    // Get the map's current bearing
-    const mapBearing = map.getBearing();
-
-    // Iterate over each marker
-    for (const vehicleId in markers) {
-        const marker = markers[vehicleId];
-
-        // Get the bearing from the marker object
-        const bearing = marker.properties.Heading;
-
-        // Adjust the bearing by 180 degrees
-        const adjustedBearing = (bearing) % 360;
-
-        // Calculate the final bearing based on the map's bearing
-        const finalBearing = (adjustedBearing - mapBearing);
-
-        // Set the marker's rotation
-        marker.setRotation(finalBearing);
-    }
-}
 
 map.addControl(new HomeControl(), 'top-left');
 
@@ -808,14 +801,3 @@ map.addControl(geolocate, 'top-left');
 geolocate.on('geolocate', function(e) {
     map.flyTo({center: [e.coords.longitude, e.coords.latitude], zoom: 14});
 });
-
-if (!document.getElementById('hide-bearing-indicator')) {
-  const style = document.createElement('style');
-  style.id = 'hide-bearing-indicator';
-  style.textContent = `
-    .bearing-indicator {
-      display: none !important;
-    }
-  `;
-  document.head.appendChild(style);
-}

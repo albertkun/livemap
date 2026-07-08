@@ -597,20 +597,6 @@ padding-left:0
 opacity:.5
 }
 
-.vehicle-marker .bearing-indicator {
-position: absolute;
-width: 100%;
-height: 2.25rem;
-left: 0;
-right: 0;
-bottom: 0;
-z-index: -1;
-transform-origin: center 1.5rem;
-text-align: center;
-background: url('images/arrow-white.svg') no-repeat center;
-background-size: contain;
-}
-
 /* Updated top–center drop–down panel style */
 #menu-hover {
     /* Updated top–center drop–down panel style using CSS Grid */
